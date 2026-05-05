@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/marketing/hero-section";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { ServicesSection } from "@/components/marketing/services-section";
 import { SiteHeader } from "@/components/marketing/site-header";
+import { TestimonialsSection } from "@/components/marketing/testimonials-section";
 import { Suspense } from "react";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
         <HeroSection />
         <ServicesSection />
         <AboutSection />
+        <TestimonialsSection />
         <Suspense fallback={<ContactFallback />}>
           <ContactSection />
         </Suspense>

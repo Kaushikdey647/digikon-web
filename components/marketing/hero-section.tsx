@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function HeroSection() {
   return (
@@ -22,10 +23,23 @@ export function HeroSection() {
           reach the right audiences and turn clicks into customers.
         </p>
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button asChild size="lg">
+          <Button
+            asChild
+            size="lg"
+            className={cn(
+              "bg-saffron text-saffron-foreground shadow hover:bg-saffron/90",
+            )}
+          >
             <Link href="/consult">Get a free consult</Link>
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className={cn(
+              "border-saffron text-saffron bg-transparent hover:bg-saffron/10 hover:text-saffron",
+            )}
+          >
             <Link href="/services">See services</Link>
           </Button>
         </div>
