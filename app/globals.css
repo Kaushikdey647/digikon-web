@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 42 28% 97%;
+    --foreground: 162 30% 15%;
+    --card: 42 22% 99%;
+    --card-foreground: 162 30% 15%;
+    --popover: 42 22% 99%;
+    --popover-foreground: 162 30% 15%;
+    --primary: 162 32% 22%;
+    --primary-foreground: 38 28% 90%;
+    /* Saffron as secondary brand wash */
+    --secondary: 38 78% 92%;
+    --secondary-foreground: 26 58% 22%;
+    --muted: 40 14% 94%;
+    --muted-foreground: 162 16% 38%;
+    --accent: 36 88% 88%;
+    --accent-foreground: 162 32% 16%;
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 42 28% 99%;
+    --border: 162 12% 86%;
+    --input: 162 12% 86%;
+    --ring: 34 82% 48%;
+    /* Explicit saffron for links, badges, highlights */
+    --saffron: 36 88% 50%;
+    --saffron-foreground: 162 38% 12%;
+    --chart-1: 162 45% 42%;
+    --chart-2: 36 82% 52%;
+    --chart-3: 155 38% 36%;
+    --chart-4: 42 40% 62%;
+    --chart-5: 32 75% 48%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 162 28% 14%;
+    --foreground: 38 24% 82%;
+    --card: 162 26% 18%;
+    --card-foreground: 38 24% 82%;
+    --popover: 162 26% 17%;
+    --popover-foreground: 38 24% 82%;
+    --primary: 38 28% 88%;
+    --primary-foreground: 162 32% 12%;
+    --secondary: 32 38% 26%;
+    --secondary-foreground: 40 90% 90%;
+    --muted: 162 20% 20%;
+    --muted-foreground: 38 12% 68%;
+    --accent: 36 72% 48%;
+    --accent-foreground: 162 40% 10%;
+    --destructive: 0 62% 42%;
+    --destructive-foreground: 38 28% 96%;
+    --border: 162 18% 28%;
+    --input: 162 18% 28%;
+    --ring: 38 92% 58%;
+    --saffron: 38 95% 58%;
+    --saffron-foreground: 162 42% 10%;
+    --chart-1: 162 50% 55%;
+    --chart-2: 38 90% 58%;
+    --chart-3: 155 45% 48%;
+    --chart-4: 42 35% 58%;
+    --chart-5: 32 85% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
