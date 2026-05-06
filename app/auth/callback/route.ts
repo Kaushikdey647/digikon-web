@@ -12,8 +12,20 @@ export async function GET(request: NextRequest) {
   const url = request.nextUrl;
   const code = url.searchParams.get("code");
   const next = safeNextPath(url.searchParams.get("next"));
+  const oauthError = url.searchParams.get("error");
+  const oauthDescription = url.searchParams.get("error_description");
 
   if (!code) {
+    if (oauthError || oauthDescription) {
+      const message =
+        oauthDescription?.trim() || oauthError || "OAuth sign-in failed.";
+      return NextResponse.redirect(
+        new URL(
+          `/auth/error?error=${encodeURIComponent(message)}`,
+          url.origin,
+        ),
+      );
+    }
     return NextResponse.redirect(
       new URL("/auth/error?error=missing_code", url.origin),
     );

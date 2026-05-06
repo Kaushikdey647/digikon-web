@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { OAuthSiteErrorRedirect } from "@/components/auth/oauth-site-error-redirect";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -37,6 +38,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <OAuthSiteErrorRedirect />
           {children}
         </ThemeProvider>
         <Analytics />
