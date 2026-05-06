@@ -1,9 +1,7 @@
 "use server";
 
-/**
- * Lead capture action. Replace the log below with a Supabase insert, email
- * provider (e.g. Resend), or CRM webhook when ready for production persistence.
- */
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 export type LeadFormState =
   | { status: "idle" }
   | { status: "success" }
@@ -24,6 +22,10 @@ function isValidEmail(email: string): boolean {
   return basic.test(email);
 }
 
+function normalizeFormContext(raw: string): "home" | "consult" {
+  return raw === "consult" ? "consult" : "home";
+}
+
 export async function submitLead(
   _prevState: LeadFormState,
   formData: FormData,
@@ -31,6 +33,9 @@ export async function submitLead(
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
+  const form_context = normalizeFormContext(
+    String(formData.get("form_context") ?? "home").trim(),
+  );
 
   const fieldErrors: Record<string, string> = {};
 
@@ -62,14 +67,22 @@ export async function submitLead(
     };
   }
 
-  const emailDomain =
-    email.includes("@") ? email.split("@").pop()?.slice(0, 64) : undefined;
-
-  console.info("[lead] new submission", {
-    nameLength: name.length,
-    emailDomain: emailDomain ?? "unknown",
-    messageLength: message.length,
+  const supabase = await createClient();
+  const { error } = await supabase.from("consult_requests").insert({
+    name,
+    email,
+    message,
+    form_context,
   });
 
+  if (error) {
+    return {
+      status: "error",
+      error: "We could not save your request. Please try again shortly.",
+    };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/consult");
   return { status: "success" };
 }

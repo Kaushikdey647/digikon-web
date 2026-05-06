@@ -4,12 +4,14 @@ type ContactSectionProps = {
   id?: string;
   heading?: string;
   description?: string;
+  formContext?: "home" | "consult";
 };
 
 export function ContactSection({
   id = "contact",
   heading = "Get in touch",
   description = "Ready to grow? Send a note and we'll schedule a short intro call.",
+  formContext = "home",
 }: ContactSectionProps) {
   const headingId = `${id}-heading`;
 
@@ -29,7 +31,7 @@ export function ContactSection({
           </h2>
           <p className="mt-3 text-muted-foreground">{description}</p>
         </div>
-        <LeadForm />
+        <LeadForm formContext={formContext} />
       </div>
     </section>
   );

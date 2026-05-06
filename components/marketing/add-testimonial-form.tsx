@@ -1,7 +1,10 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
-import { submitLead, type LeadFormState } from "@/app/actions/lead";
+import {
+  submitTestimonial,
+  type TestimonialFormState,
+} from "@/app/actions/testimonial";
+import { marketingIconKeys } from "@/lib/marketing-icons";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,20 +16,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useActionState, useEffect, useRef } from "react";
 
-const initialState: LeadFormState = { status: "idle" };
+const initialState: TestimonialFormState = { status: "idle" };
 
 const textareaClassName = cn(
   "flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
 );
 
-type LeadFormProps = {
-  formContext?: "home" | "consult";
-};
-
-export function LeadForm({ formContext = "home" }: LeadFormProps) {
+export function AddTestimonialForm() {
   const [state, formAction, isPending] = useActionState(
-    submitLead,
+    submitTestimonial,
     initialState,
   );
   const formRef = useRef<HTMLFormElement>(null);
@@ -45,74 +45,80 @@ export function LeadForm({ formContext = "home" }: LeadFormProps) {
   return (
     <Card className="border-border/80 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-xl">Start a conversation</CardTitle>
+        <CardTitle className="text-xl">Your testimonial</CardTitle>
         <CardDescription>
-          Share your goals and we&apos;ll get back to you within two business
-          days.
+          Share a short quote we can show on the homepage. It appears after you
+          submit (highest ratings are listed first).
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form ref={formRef} action={formAction} className="space-y-5">
-          <input type="hidden" name="form_context" value={formContext} />
           <div className="space-y-2">
-            <Label htmlFor="lead-name">Name</Label>
+            <Label htmlFor="tm-name">Name</Label>
             <Input
-              id="lead-name"
+              id="tm-name"
               name="name"
               type="text"
               autoComplete="name"
               required
-              maxLength={100}
+              maxLength={120}
               aria-invalid={fieldErrors.name ? true : undefined}
-              aria-describedby={
-                fieldErrors.name ? "lead-name-error" : undefined
-              }
             />
             {fieldErrors.name ? (
-              <p id="lead-name-error" className="text-sm text-destructive">
-                {fieldErrors.name}
-              </p>
+              <p className="text-sm text-destructive">{fieldErrors.name}</p>
             ) : null}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="lead-email">Email</Label>
-            <Input
-              id="lead-email"
-              name="email"
-              type="email"
-              autoComplete="email"
+            <Label htmlFor="tm-icon">Icon</Label>
+            <select
+              id="tm-icon"
+              name="icon"
               required
-              maxLength={254}
-              aria-invalid={fieldErrors.email ? true : undefined}
-              aria-describedby={
-                fieldErrors.email ? "lead-email-error" : undefined
-              }
-            />
-            {fieldErrors.email ? (
-              <p id="lead-email-error" className="text-sm text-destructive">
-                {fieldErrors.email}
-              </p>
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm"
+              defaultValue={marketingIconKeys()[0]}
+              aria-invalid={fieldErrors.icon ? true : undefined}
+            >
+              {marketingIconKeys().map((key) => (
+                <option key={key} value={key}>
+                  {key}
+                </option>
+              ))}
+            </select>
+            {fieldErrors.icon ? (
+              <p className="text-sm text-destructive">{fieldErrors.icon}</p>
             ) : null}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="lead-message">Message</Label>
+            <Label htmlFor="tm-rating">Rating (0–5)</Label>
+            <Input
+              id="tm-rating"
+              name="rating"
+              type="number"
+              inputMode="decimal"
+              step="0.1"
+              min={0}
+              max={5}
+              required
+              aria-invalid={fieldErrors.rating ? true : undefined}
+            />
+            {fieldErrors.rating ? (
+              <p className="text-sm text-destructive">{fieldErrors.rating}</p>
+            ) : null}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="tm-message">Message</Label>
             <textarea
-              id="lead-message"
+              id="tm-message"
               name="message"
               className={textareaClassName}
               required
               rows={5}
-              maxLength={5000}
-              placeholder="Tell us about your business and what you want to achieve…"
+              maxLength={2000}
+              placeholder="What stood out about working with us?"
               aria-invalid={fieldErrors.message ? true : undefined}
-              aria-describedby={
-                fieldErrors.message ? "lead-message-error" : undefined
-              }
             />
             {fieldErrors.message ? (
-              <p id="lead-message-error" className="text-sm text-destructive">
-                {fieldErrors.message}
-              </p>
+              <p className="text-sm text-destructive">{fieldErrors.message}</p>
             ) : null}
           </div>
           {formError ? (
@@ -122,11 +128,11 @@ export function LeadForm({ formContext = "home" }: LeadFormProps) {
           ) : null}
           {success ? (
             <p className="text-sm text-muted-foreground" role="status">
-              Thanks — your message was sent. We&apos;ll be in touch soon.
+              Thank you — your testimonial was published.
             </p>
           ) : null}
           <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
-            {isPending ? "Sending…" : "Request consult"}
+            {isPending ? "Saving…" : "Publish testimonial"}
           </Button>
         </form>
       </CardContent>

@@ -1,4 +1,8 @@
 import { AboutSection } from "@/components/marketing/about-section";
+import {
+  ServicesSectionFallback,
+  TestimonialsSectionFallback,
+} from "@/components/marketing/async-section-fallbacks";
 import { ContactFallback } from "@/components/marketing/contact-fallback";
 import { ContactSection } from "@/components/marketing/contact-section";
 import { HeroSection } from "@/components/marketing/hero-section";
@@ -14,9 +18,13 @@ export default function Home() {
       <SiteHeader />
       <main className="flex-1">
         <HeroSection />
-        <ServicesSection />
+        <Suspense fallback={<ServicesSectionFallback />}>
+          <ServicesSection />
+        </Suspense>
         <AboutSection />
-        <TestimonialsSection />
+        <Suspense fallback={<TestimonialsSectionFallback />}>
+          <TestimonialsSection />
+        </Suspense>
         <Suspense fallback={<ContactFallback />}>
           <ContactSection />
         </Suspense>

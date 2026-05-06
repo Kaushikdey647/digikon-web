@@ -1,6 +1,15 @@
-import { ServicesGrid } from "@/components/marketing/services-list";
+import { ServicesGrid, type MarketingServiceRow } from "@/components/marketing/services-list";
+import { createClient } from "@/lib/supabase/server";
 
-export function ServicesSection() {
+export async function ServicesSection() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("marketing_services")
+    .select("id, title, description, icon_key, sort_order")
+    .order("sort_order", { ascending: true });
+
+  const services = (data ?? []) as MarketingServiceRow[];
+
   return (
     <section
       id="services"
@@ -20,7 +29,7 @@ export function ServicesSection() {
           </p>
         </div>
         <div className="mt-12">
-          <ServicesGrid />
+          <ServicesGrid services={services} />
         </div>
       </div>
     </section>

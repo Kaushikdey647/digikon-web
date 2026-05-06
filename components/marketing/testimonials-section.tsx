@@ -1,69 +1,65 @@
-import { Quote } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/server";
+import { getMarketingIcon } from "@/lib/marketing-icons";
+import { Quote, Star } from "lucide-react";
 
-type Testimonial = {
+export type TestimonialRow = {
+  id: string;
   name: string;
-  company?: string;
-  role?: string;
-  quote: string;
+  icon: string;
+  rating: number;
+  message: string;
 };
 
-const testimonials: Testimonial[] = [
-  {
-    name: "Alex Rivera",
-    role: "CMO",
-    company: "Northline Retail Co.",
-    quote:
-      "Digikon tightened our paid search and reporting in weeks. We finally see which campaigns actually move revenue, not just clicks.",
-  },
-  {
-    name: "Sam Okonkwo",
-    company: "Brightfield SaaS",
-    quote:
-      "Clear communication and fast iteration. Our landing tests went from idea to live without the usual agency drag.",
-  },
-  {
-    name: "Jordan Lee",
-    role: "Founder",
-    company: "Harbor & Co.",
-    quote:
-      "They treated our budget like their own. SEO and content finally tell one story — our pipeline noticed.",
-  },
-  {
-    name: "Priya Desai",
-    role: "Marketing Director",
-    company: "Vertex Logistics",
-    quote:
-      "The team made analytics approachable for leadership. We review one concise dashboard and know what to do next.",
-  },
-];
+function StarRating({ rating }: { rating: number }) {
+  const full = Math.floor(rating);
+  const partial = Math.max(0, Math.min(1, rating - full));
+  const empty = 5 - full - (partial > 0 ? 1 : 0);
 
-function AttributionLine({ name, role, company }: Testimonial) {
-  if (role && company) {
-    return (
-      <>
-        {name}, {role} · {company}
-      </>
-    );
-  }
-  if (company) {
-    return (
-      <>
-        {name} · {company}
-      </>
-    );
-  }
-  if (role) {
-    return (
-      <>
-        {name} · {role}
-      </>
-    );
-  }
-  return <>{name}</>;
+  return (
+    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5`}>
+      {Array.from({ length: full }, (_, i) => (
+        <Star
+          key={`f-${i}`}
+          className="h-4 w-4 fill-saffron text-saffron"
+          aria-hidden
+        />
+      ))}
+      {partial > 0 ? (
+        <span className="relative h-4 w-4" aria-hidden>
+          <Star className="absolute h-4 w-4 text-muted-foreground/40" />
+          <span
+            className="absolute overflow-hidden"
+            style={{ width: `${partial * 100}%` }}
+          >
+            <Star className="h-4 w-4 fill-saffron text-saffron" />
+          </span>
+        </span>
+      ) : null}
+      {Array.from({ length: empty }, (_, i) => (
+        <Star
+          key={`e-${i}`}
+          className="h-4 w-4 text-muted-foreground/40"
+          aria-hidden
+        />
+      ))}
+      <span className="ml-2 text-xs font-medium tabular-nums text-muted-foreground">
+        {rating.toFixed(1)}/5
+      </span>
+    </div>
+  );
 }
 
-export function TestimonialsSection() {
+export async function TestimonialsSection() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("testimonials")
+    .select("id, name, icon, rating, message")
+    .order("rating", { ascending: false })
+    .order("created_at", { ascending: false });
+
+  const testimonials = (data ?? []) as TestimonialRow[];
+
   return (
     <section
       id="testimonials"
@@ -79,35 +75,54 @@ export function TestimonialsSection() {
             What clients say
           </h2>
           <p className="mt-3 text-muted-foreground">
-            A few teams we&apos;ve partnered with — replace with your real client
-            names and quotes anytime.
+            Recent feedback from teams we&apos;ve partnered with.
           </p>
         </div>
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t) => (
-            <li key={`${t.name}-${t.company ?? "solo"}`}>
-              <Card className="h-full border-l-2 border-l-saffron/80 shadow-sm transition-shadow hover:shadow-md">
-                <CardHeader className="pb-2">
-                  <Quote
-                    className="h-5 w-5 text-saffron"
-                    aria-hidden
-                    strokeWidth={2}
-                  />
-                </CardHeader>
-                <CardContent className="space-y-4 pt-0">
-                  <figure>
-                    <blockquote className="text-sm leading-relaxed text-muted-foreground">
-                      <p>&ldquo;{t.quote}&rdquo;</p>
-                    </blockquote>
-                    <figcaption className="mt-4 border-t border-border/60 pt-4 text-sm font-medium text-foreground">
-                      <AttributionLine {...t} />
-                    </figcaption>
-                  </figure>
-                </CardContent>
-              </Card>
-            </li>
-          ))}
-        </ul>
+        {testimonials.length === 0 ? (
+          <p className="mt-12 text-center text-sm text-muted-foreground">
+            Testimonials will appear here once they are added in Supabase.
+          </p>
+        ) : (
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map((t) => {
+              const PersonIcon = getMarketingIcon(t.icon);
+              return (
+                <li key={t.id}>
+                  <Card className="h-full border-l-2 border-l-saffron/80 shadow-sm transition-shadow hover:shadow-md">
+                    <CardHeader className="space-y-3 pb-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <Quote
+                          className="h-5 w-5 shrink-0 text-saffron"
+                          aria-hidden
+                          strokeWidth={2}
+                        />
+                        {PersonIcon ? (
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-muted/50">
+                            <PersonIcon
+                              className="h-4 w-4 text-foreground"
+                              aria-hidden
+                            />
+                          </div>
+                        ) : null}
+                      </div>
+                      <StarRating rating={t.rating} />
+                    </CardHeader>
+                    <CardContent className="space-y-4 pt-0">
+                      <figure>
+                        <blockquote className="text-sm leading-relaxed text-muted-foreground">
+                          <p>&ldquo;{t.message}&rdquo;</p>
+                        </blockquote>
+                        <figcaption className="mt-4 border-t border-border/60 pt-4 text-sm font-medium text-foreground">
+                          {t.name}
+                        </figcaption>
+                      </figure>
+                    </CardContent>
+                  </Card>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </section>
   );

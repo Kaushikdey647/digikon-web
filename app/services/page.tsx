@@ -1,15 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ServicesSectionFallback } from "@/components/marketing/async-section-fallbacks";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
-import { ServicesGrid } from "@/components/marketing/services-list";
+import {
+  ServicesGrid,
+  type MarketingServiceRow,
+} from "@/components/marketing/services-list";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Services | Digikon Marketing",
   description:
     "SEO, paid media, content, and analytics — full-funnel digital marketing from Digikon Marketing.",
 };
+
+async function ServicesGridFromSupabase() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("marketing_services")
+    .select("id, title, description, icon_key, sort_order")
+    .order("sort_order", { ascending: true });
+
+  const services = (data ?? []) as MarketingServiceRow[];
+
+  return <ServicesGrid services={services} />;
+}
 
 export default function ServicesPage() {
   return (
@@ -32,7 +50,9 @@ export default function ServicesPage() {
             </div>
           </div>
           <div className="mt-14">
-            <ServicesGrid />
+            <Suspense fallback={<ServicesSectionFallback />}>
+              <ServicesGridFromSupabase />
+            </Suspense>
           </div>
         </div>
       </main>
