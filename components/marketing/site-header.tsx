@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { HeaderAuth } from "@/components/marketing/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 
 const nav = [
@@ -32,28 +33,22 @@ export function SiteHeader() {
           <span className="text-sm font-semibold tracking-tight">Marketing</span>
         </Link>
 
-        <nav
-          className="hidden items-center gap-6 text-sm text-muted-foreground md:flex"
-          aria-label="Main"
-        >
-          {nav.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="transition-colors hover:text-foreground"
-            >
-              {label}
-            </Link>
-          ))}
-          <Link
-            href="/auth/login"
-            className="transition-colors hover:text-foreground"
+        <div className="flex flex-1 items-center justify-end gap-3 md:gap-6">
+          <nav
+            className="hidden items-center gap-6 text-sm text-muted-foreground md:flex"
+            aria-label="Main"
           >
-            Client login
-          </Link>
-        </nav>
-
-        <div className="flex items-center gap-1">
+            {nav.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="transition-colors hover:text-foreground"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+          <HeaderAuth />
           <ThemeSwitcher />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -72,9 +67,6 @@ export function SiteHeader() {
                   <Link href={href}>{label}</Link>
                 </DropdownMenuItem>
               ))}
-              <DropdownMenuItem asChild>
-                <Link href="/auth/login">Client login</Link>
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

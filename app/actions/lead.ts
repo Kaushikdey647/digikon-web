@@ -30,6 +30,16 @@ export async function submitLead(
   _prevState: LeadFormState,
   formData: FormData,
 ): Promise<LeadFormState> {
+  const supabase = await createClient();
+  const { data: claimsData, error: claimsError } =
+    await supabase.auth.getClaims();
+  if (claimsError || !claimsData?.claims?.sub) {
+    return {
+      status: "error",
+      error: "You must be signed in to send a message.",
+    };
+  }
+
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
@@ -67,7 +77,6 @@ export async function submitLead(
     };
   }
 
-  const supabase = await createClient();
   const { error } = await supabase.from("consult_requests").insert({
     name,
     email,
