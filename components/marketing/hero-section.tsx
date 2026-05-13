@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { HeroCanvas } from "@/components/marketing/hero-canvas";
 import { INSTAGRAM_PROFILE_URL } from "@/lib/marketing-links";
 import { cn } from "@/lib/utils";
 
 export function HeroSection() {
   return (
-    <section
-      className="relative px-5 py-20 md:py-28"
-      aria-labelledby="hero-heading"
-    >
+    <HeroCanvas headingId="hero-heading">
       <div className="mx-auto max-w-3xl text-center">
         <p className="mb-4 text-sm font-medium text-saffron">
           Digital marketing that compounds
@@ -67,6 +65,6 @@ export function HeroSection() {
           </a>
         </Button>
       </div>
-    </section>
+    </HeroCanvas>
   );
 }
