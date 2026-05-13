@@ -22,9 +22,13 @@ const textareaClassName = cn(
 
 type LeadFormProps = {
   formContext?: "home" | "consult";
+  marketingServiceId?: string | null;
 };
 
-export function LeadForm({ formContext = "home" }: LeadFormProps) {
+export function LeadForm({
+  formContext = "home",
+  marketingServiceId = null,
+}: LeadFormProps) {
   const [state, formAction, isPending] = useActionState(
     submitLead,
     initialState,
@@ -54,6 +58,13 @@ export function LeadForm({ formContext = "home" }: LeadFormProps) {
       <CardContent>
         <form ref={formRef} action={formAction} className="space-y-5">
           <input type="hidden" name="form_context" value={formContext} />
+          {marketingServiceId ? (
+            <input
+              type="hidden"
+              name="marketing_service_id"
+              value={marketingServiceId}
+            />
+          ) : null}
           <div className="space-y-2">
             <Label htmlFor="lead-name">Name</Label>
             <Input
@@ -112,6 +123,39 @@ export function LeadForm({ formContext = "home" }: LeadFormProps) {
             {fieldErrors.message ? (
               <p id="lead-message-error" className="text-sm text-destructive">
                 {fieldErrors.message}
+              </p>
+            ) : null}
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-start gap-3">
+              <input
+                id="lead-privacy-consent"
+                name="privacy_consent"
+                type="checkbox"
+                value="on"
+                required
+                className="mt-1.5 h-4 w-4 shrink-0 rounded border border-input accent-primary"
+                aria-invalid={fieldErrors.privacy_consent ? true : undefined}
+                aria-describedby={
+                  fieldErrors.privacy_consent
+                    ? "lead-privacy-consent-error"
+                    : undefined
+                }
+              />
+              <Label
+                htmlFor="lead-privacy-consent"
+                className="cursor-pointer text-sm font-normal leading-relaxed text-muted-foreground"
+              >
+                I agree to be contacted about this request and understand how my
+                information will be used to respond.
+              </Label>
+            </div>
+            {fieldErrors.privacy_consent ? (
+              <p
+                id="lead-privacy-consent-error"
+                className="text-sm text-destructive"
+              >
+                {fieldErrors.privacy_consent}
               </p>
             ) : null}
           </div>

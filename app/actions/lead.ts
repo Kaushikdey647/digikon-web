@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+
 export type LeadFormState =
   | { status: "idle" }
   | { status: "success" }
@@ -16,6 +17,9 @@ const EMAIL_MAX = 254;
 const MESSAGE_MAX = 5000;
 const MESSAGE_MIN = 10;
 
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 function isValidEmail(email: string): boolean {
   if (email.length > EMAIL_MAX) return false;
   const basic = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,6 +28,11 @@ function isValidEmail(email: string): boolean {
 
 function normalizeFormContext(raw: string): "home" | "consult" {
   return raw === "consult" ? "consult" : "home";
+}
+
+function privacyConsentFromFormData(formData: FormData): boolean {
+  const v = formData.get("privacy_consent");
+  return v === "on" || v === "true" || v === "1";
 }
 
 export async function submitLead(
@@ -47,7 +56,36 @@ export async function submitLead(
     String(formData.get("form_context") ?? "home").trim(),
   );
 
+  const marketingServiceIdRaw = String(
+    formData.get("marketing_service_id") ?? "",
+  ).trim();
+
   const fieldErrors: Record<string, string> = {};
+
+  let marketing_service_id: string | null = null;
+  if (marketingServiceIdRaw) {
+    if (!UUID_RE.test(marketingServiceIdRaw)) {
+      fieldErrors.marketing_service_id =
+        "Invalid service context. Please reload the page and try again.";
+    } else {
+      const { data: svcRow, error: svcErr } = await supabase
+        .from("marketing_services")
+        .select("id")
+        .eq("id", marketingServiceIdRaw)
+        .maybeSingle();
+      if (svcErr || !svcRow) {
+        fieldErrors.marketing_service_id =
+          "That service is no longer available. Submit without service context or pick a service again.";
+      } else {
+        marketing_service_id = marketingServiceIdRaw;
+      }
+    }
+  }
+
+  if (!privacyConsentFromFormData(formData)) {
+    fieldErrors.privacy_consent =
+      "Please confirm you agree to be contacted about this request.";
+  }
 
   if (!name) {
     fieldErrors.name = "Name is required.";
@@ -77,11 +115,15 @@ export async function submitLead(
     };
   }
 
+  const privacy_consent_at = new Date().toISOString();
+
   const { error } = await supabase.from("consult_requests").insert({
     name,
     email,
     message,
     form_context,
+    marketing_service_id,
+    privacy_consent_at,
   });
 
   if (error) {
@@ -93,5 +135,6 @@ export async function submitLead(
 
   revalidatePath("/");
   revalidatePath("/consult");
+  revalidatePath("/services", "layout");
   return { status: "success" };
 }

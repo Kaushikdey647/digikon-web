@@ -21,7 +21,9 @@ async function ServicesGridFromSupabase() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("marketing_services")
-    .select("id, title, description, icon_key, sort_order")
+    .select(
+      "id, slug, title, description, icon_key, sort_order, home_featured_rank, roadmap_md, sla_md, examples, testimonial_id",
+    )
     .order("sort_order", { ascending: true });
 
   const services = (data ?? []) as MarketingServiceRow[];
@@ -40,8 +42,8 @@ export default function ServicesPage() {
               Services
             </h1>
             <p className="mt-4 text-muted-foreground md:text-lg">
-              Full-funnel support from first impression to repeat purchase.
-              Start with a free consult to align on priorities and scope.
+              Every offering below has its own roadmap, SLA, examples, and
+              consult path. Start anywhere, or book a general consult first.
             </p>
             <div className="mt-8">
               <Button asChild size="lg">

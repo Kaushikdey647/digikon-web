@@ -15,6 +15,10 @@ type ContactSectionProps = {
   heading?: string;
   description?: string;
   formContext?: "home" | "consult";
+  /** When set, submitted consults are attributed to this service. */
+  marketingServiceId?: string | null;
+  /** Post-login redirect (include hash when the form lives under #consult). */
+  loginNext?: string;
 };
 
 export async function ContactSection({
@@ -22,12 +26,16 @@ export async function ContactSection({
   heading = "Get in touch",
   description = "Ready to grow? Send a note and we'll schedule a short intro call.",
   formContext = "home",
+  marketingServiceId = null,
+  loginNext: loginNextOverride,
 }: ContactSectionProps) {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getClaims();
   const isSignedIn = !error && Boolean(data?.claims?.sub);
 
-  const loginNext = formContext === "consult" ? "/consult" : "/#contact";
+  const defaultLoginNext =
+    formContext === "consult" ? "/consult" : "/#contact";
+  const loginNext = loginNextOverride ?? defaultLoginNext;
   const loginHref = `/auth/login?next=${encodeURIComponent(loginNext)}`;
 
   const headingId = `${id}-heading`;
@@ -49,7 +57,10 @@ export async function ContactSection({
           <p className="mt-3 text-muted-foreground">{description}</p>
         </div>
         {isSignedIn ? (
-          <LeadForm formContext={formContext} />
+          <LeadForm
+            formContext={formContext}
+            marketingServiceId={marketingServiceId}
+          />
         ) : (
           <Card className="border-border/80 shadow-sm">
             <CardHeader>
