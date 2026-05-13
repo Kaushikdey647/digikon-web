@@ -23,7 +23,7 @@ export function MarketingFooter() {
             href="/auth/login"
             className="transition-colors hover:text-foreground"
           >
-            Client login
+            Log in
           </Link>
           <ThemeSwitcher />
         </div>

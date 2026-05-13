@@ -75,7 +75,7 @@ export function HeaderAuth() {
   if (!user) {
     return (
       <Link href="/auth/login" className={loginClassName}>
-        Client login
+        Log in
       </Link>
     );
   }

@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isCurrentUserAdmin } from "@/lib/auth/is-admin";
 import { hasEnvVars } from "../utils";
 
 export async function updateSession(request: NextRequest) {
@@ -48,11 +49,12 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   const pathname = request.nextUrl.pathname;
-  const isProtectedRoute =
+  const needsAuth =
     pathname.startsWith("/protected") ||
-    pathname.startsWith("/testimonials/new");
+    pathname.startsWith("/testimonials/new") ||
+    pathname.startsWith("/admin");
 
-  if (isProtectedRoute && !user) {
+  if (needsAuth && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     url.searchParams.set("next", `${pathname}${request.nextUrl.search}`);
@@ -61,6 +63,20 @@ export async function updateSession(request: NextRequest) {
       redirectResponse.cookies.set(cookie.name, cookie.value);
     });
     return redirectResponse;
+  }
+
+  if (pathname.startsWith("/admin") && user) {
+    const admin = await isCurrentUserAdmin(supabase);
+    if (!admin) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      url.search = "";
+      const redirectResponse = NextResponse.redirect(url);
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        redirectResponse.cookies.set(cookie.name, cookie.value);
+      });
+      return redirectResponse;
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

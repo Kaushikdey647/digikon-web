@@ -10,6 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AdminNavLink,
+  AdminNavMenuItem,
+} from "@/components/marketing/admin-nav-link";
 import { HeaderAuth } from "@/components/marketing/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 
@@ -47,6 +51,7 @@ export function SiteHeader() {
                 {label}
               </Link>
             ))}
+            <AdminNavLink />
           </nav>
           <HeaderAuth />
           <ThemeSwitcher />
@@ -67,6 +72,7 @@ export function SiteHeader() {
                   <Link href={href}>{label}</Link>
                 </DropdownMenuItem>
               ))}
+              <AdminNavMenuItem />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

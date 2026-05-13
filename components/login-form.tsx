@@ -70,9 +70,10 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Client login</CardTitle>
+          <CardTitle className="text-2xl">Log in</CardTitle>
           <CardDescription>
-            Sign in with Google to submit a testimonial or open the client area.
+            Sign in with Google to submit a testimonial, send a consult request, or
+            use admin tools if your account has access.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
