@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { OAuthSiteErrorRedirect } from "@/components/auth/oauth-site-error-redirect";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { getSiteUrl } from "@/lib/site";
+import { SITE_SEO_DESCRIPTION } from "@/lib/site-brand";
 import { pwaTheme } from "@/lib/pwa-theme";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
@@ -9,9 +10,8 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 
 const siteUrl = getSiteUrl();
-const defaultTitle = "Digikon Marketing | Digital marketing agency";
-const defaultDescription =
-  "Digikon Marketing helps brands grow with SEO, paid media, content, and analytics — strategy through optimization.";
+const defaultTitle = "Digikon Marketing | Brands built with digital excellence";
+const defaultDescription = SITE_SEO_DESCRIPTION;
 
 export const viewport: Viewport = {
   themeColor: pwaTheme.themeColor,

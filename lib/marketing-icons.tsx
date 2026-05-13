@@ -2,13 +2,20 @@ import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
   Building2,
+  Clapperboard,
+  Globe2,
   Megaphone,
+  Palette,
   PenLine,
+  QrCode,
   Search,
+  Share2,
+  Smartphone,
   Sparkles,
   Star,
   User,
   Users,
+  Workflow,
 } from "lucide-react";
 
 const marketingIcons = {
@@ -21,6 +28,13 @@ const marketingIcons = {
   Building2,
   Sparkles,
   Star,
+  Share2,
+  Workflow,
+  Globe2,
+  Palette,
+  Clapperboard,
+  Smartphone,
+  QrCode,
 } as const satisfies Record<string, LucideIcon>;
 
 export type MarketingIconKey = keyof typeof marketingIcons;

@@ -11,15 +11,16 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 
+const servicesMetaDescription =
+  "Digikon Marketing services: social media, content marketing, SEO, automation, website design, graphics, video & photo editing, app development, ads management, and QR / digital menus — strategy through execution.";
+
 export const metadata: Metadata = {
   title: "Services",
-  description:
-    "SEO, paid media, content, and analytics — full-funnel digital marketing from Digikon Marketing.",
+  description: servicesMetaDescription,
   alternates: { canonical: "/services" },
   openGraph: {
     title: "Services | Digikon Marketing",
-    description:
-      "SEO, paid media, content, and analytics — full-funnel digital marketing from Digikon Marketing.",
+    description: servicesMetaDescription,
     url: "/services",
   },
 };

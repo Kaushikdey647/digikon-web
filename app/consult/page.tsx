@@ -4,17 +4,22 @@ import { ContactSection } from "@/components/marketing/contact-section";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { getServiceBySlug } from "@/lib/marketing";
+import {
+  DIGIKON_PHONE_DISPLAY,
+  DIGIKON_WHATSAPP_URL,
+  INSTAGRAM_PROFILE_URL,
+} from "@/lib/marketing-links";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Free consult",
   description:
-    "Book a no-obligation consult with Digikon Marketing. Tell us your goals and we'll reply within two business days.",
+    "Book a no-obligation consult with Digikon Marketing, or WhatsApp +91 91018 01200 for a quick question. We reply within two business days to form requests.",
   alternates: { canonical: "/consult" },
   openGraph: {
     title: "Free consult | Digikon Marketing",
     description:
-      "Book a no-obligation consult with Digikon Marketing. Tell us your goals and we'll reply within two business days.",
+      "Book a no-obligation consult with Digikon Marketing, or WhatsApp +91 91018 01200 for a quick question. We reply within two business days to form requests.",
     url: "/consult",
   },
 };
@@ -81,7 +86,25 @@ async function ConsultPageContent({ searchParams }: ConsultPageProps) {
             <p className="mt-4 text-muted-foreground md:text-lg">
               No obligation — share your goals, timeline, and what success looks
               like. We&apos;ll follow up with next steps and whether we&apos;re a
-              fit.
+              fit. You can also reach us on{" "}
+              <a
+                href={INSTAGRAM_PROFILE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-saffron underline-offset-4 hover:underline"
+              >
+                Instagram
+              </a>{" "}
+              or{" "}
+              <a
+                href={DIGIKON_WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-saffron underline-offset-4 hover:underline"
+              >
+                WhatsApp
+              </a>{" "}
+              at {DIGIKON_PHONE_DISPLAY} for a quicker chat.
             </p>
             {serviceFromQuery ? (
               <p className="mt-4 text-sm text-muted-foreground md:text-base">

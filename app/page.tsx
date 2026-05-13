@@ -12,22 +12,26 @@ import { SiteHeader } from "@/components/marketing/site-header";
 import { TestimonialsSection } from "@/components/marketing/testimonials-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getSiteUrl } from "@/lib/site";
+import {
+  DIGIKON_PHONE_E164,
+  INSTAGRAM_PROFILE_URL,
+} from "@/lib/marketing-links";
+import { SITE_SEO_DESCRIPTION } from "@/lib/site-brand";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
 const siteUrl = getSiteUrl();
-const homeDescription =
-  "Digikon Marketing helps brands grow with SEO, paid media, content, and analytics — strategy through optimization.";
+const homeDescription = SITE_SEO_DESCRIPTION;
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     url: siteUrl,
-    title: "Digikon Marketing | Digital marketing agency",
+    title: "Digikon Marketing | Brands built with digital excellence",
     description: homeDescription,
   },
   twitter: {
-    title: "Digikon Marketing | Digital marketing agency",
+    title: "Digikon Marketing | Brands built with digital excellence",
     description: homeDescription,
   },
 };
@@ -42,6 +46,14 @@ const structuredData = {
       name: "Digikon Marketing",
       url: siteUrl,
       description: homeDescription,
+      sameAs: [INSTAGRAM_PROFILE_URL],
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: DIGIKON_PHONE_E164,
+        contactType: "customer support",
+        areaServed: "IN",
+        availableLanguage: ["English", "Hindi"],
+      },
     },
     {
       "@type": "WebSite",

@@ -1,3 +1,5 @@
+import { SITE_PILLARS, SITE_TAGLINE } from "@/lib/site-brand";
+
 export function AboutSection() {
   return (
     <section
@@ -12,13 +14,15 @@ export function AboutSection() {
               id="about-heading"
               className="text-2xl font-semibold tracking-tight md:text-3xl"
             >
-              How we work
+              {SITE_TAGLINE}
             </h2>
+            <p className="mt-2 text-sm font-medium text-muted-foreground">
+              {SITE_PILLARS}
+            </p>
             <p className="mt-4 text-muted-foreground">
-              Digikon Marketing is a digital marketing agency focused on clarity
-              and outcomes. We start with your business goals, map the customer
-              journey, then execute with transparent reporting — so you always
-              know what shipped and what it drove.
+              Digikon Marketing partners with teams who want clear execution and
+              measurable growth. We align creative, paid, and owned channels so
+              your story converts — not just fills the feed.
             </p>
           </div>
           <ol className="space-y-6 text-sm">

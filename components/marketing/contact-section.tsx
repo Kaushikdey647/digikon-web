@@ -9,6 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
+import {
+  DIGIKON_PHONE_DISPLAY,
+  DIGIKON_PHONE_E164,
+  DIGIKON_WHATSAPP_URL,
+  INSTAGRAM_PROFILE_URL,
+} from "@/lib/marketing-links";
 import Link from "next/link";
 
 type ContactSectionProps = {
@@ -25,7 +31,7 @@ type ContactSectionProps = {
 export async function ContactSection({
   id = "contact",
   heading = "Get in touch",
-  description = "Ready to grow? Send a note and we'll schedule a short intro call.",
+  description = "Tell us what you need — social, SEO, content, ads, design, apps, or something else. We reply within two business days.",
   formContext = "home",
   marketingServiceId = null,
   loginNext: loginNextOverride,
@@ -68,6 +74,39 @@ export async function ContactSection({
             {heading}
           </h2>
           <p className="mt-3 text-muted-foreground">{description}</p>
+        </div>
+        <div className="mb-8 rounded-lg border border-border/80 bg-muted/20 px-4 py-4 text-center text-sm text-muted-foreground">
+          <p className="font-medium text-foreground">Reach us directly</p>
+          <p className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <a
+              href={DIGIKON_WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-saffron underline-offset-4 hover:underline"
+            >
+              WhatsApp
+            </a>
+            <span className="hidden sm:inline" aria-hidden>
+              ·
+            </span>
+            <a
+              href={`tel:${DIGIKON_PHONE_E164}`}
+              className="text-saffron underline-offset-4 hover:underline"
+            >
+              {DIGIKON_PHONE_DISPLAY}
+            </a>
+            <span className="hidden sm:inline" aria-hidden>
+              ·
+            </span>
+            <a
+              href={INSTAGRAM_PROFILE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-saffron underline-offset-4 hover:underline"
+            >
+              Instagram
+            </a>
+          </p>
         </div>
         {isSignedIn ? (
           formContext === "consult" && !consultAuthProfile ? (

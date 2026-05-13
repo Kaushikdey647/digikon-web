@@ -18,32 +18,74 @@ export const defaultMarketingServices: Omit<
   "id" | "sort_order" | "home_featured_rank" | "roadmap_md" | "sla_md" | "examples" | "testimonial_id"
 >[] = [
   {
-    slug: "search-seo",
-    title: "Search & SEO",
+    slug: "social-media-handling",
+    title: "Social Media Handling",
     description:
-      "Technical audits, content strategy, and sustainable organic growth.",
-    icon_key: "Search",
+      "Creative calendars, community management, and campaigns that fit your brand voice.",
+    icon_key: "Share2",
   },
   {
-    slug: "paid-media",
-    title: "Paid media",
+    slug: "content-marketing",
+    title: "Content Marketing",
     description:
-      "Search and social campaigns tuned for CPA, ROAS, and scale.",
-    icon_key: "Megaphone",
-  },
-  {
-    slug: "content-creative",
-    title: "Content & creative",
-    description:
-      "Brand storytelling, landing pages, and assets that convert.",
+      "Story-led blogs, landing copy, and nurture journeys that move people to action.",
     icon_key: "PenLine",
   },
   {
-    slug: "analytics",
-    title: "Analytics",
+    slug: "seo",
+    title: "SEO",
     description:
-      "Measurement frameworks, reporting, and insight-led optimization.",
-    icon_key: "BarChart3",
+      "Technical health, topical authority, and sustainable organic visibility.",
+    icon_key: "Search",
+  },
+  {
+    slug: "automation",
+    title: "Automation",
+    description:
+      "Workflows, integrations, and lifecycle triggers that save time and lift conversion.",
+    icon_key: "Workflow",
+  },
+  {
+    slug: "website-designing",
+    title: "Website Designing",
+    description:
+      "Fast, accessible sites that reflect your brand and support your funnel.",
+    icon_key: "Globe2",
+  },
+  {
+    slug: "graphic-designing",
+    title: "Graphic Designing",
+    description:
+      "Brand systems, social kits, decks, and print-ready assets.",
+    icon_key: "Palette",
+  },
+  {
+    slug: "video-and-photo-editing",
+    title: "Video and Photo Editing",
+    description:
+      "Cuts, color, motion, and social-first formats for campaigns and launches.",
+    icon_key: "Clapperboard",
+  },
+  {
+    slug: "app-development",
+    title: "App Development",
+    description:
+      "Mobile and web apps scoped for usability, performance, and maintainability.",
+    icon_key: "Smartphone",
+  },
+  {
+    slug: "ads-management",
+    title: "Ads Management",
+    description:
+      "Paid search, social, and display tuned for CPA, ROAS, and scale.",
+    icon_key: "Megaphone",
+  },
+  {
+    slug: "qr-digital-menu-designing",
+    title: "QR and Digital Menu Designing",
+    description:
+      "QR journeys, digital menus, and lightweight experiences guests actually use.",
+    icon_key: "QrCode",
   },
 ];
 
