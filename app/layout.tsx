@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { OAuthSiteErrorRedirect } from "@/components/auth/oauth-site-error-redirect";
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { getSiteUrl } from "@/lib/site";
+import { pwaTheme } from "@/lib/pwa-theme";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
@@ -10,6 +12,10 @@ const siteUrl = getSiteUrl();
 const defaultTitle = "Digikon Marketing | Digital marketing agency";
 const defaultDescription =
   "Digikon Marketing helps brands grow with SEO, paid media, content, and analytics — strategy through optimization.";
+
+export const viewport: Viewport = {
+  themeColor: pwaTheme.themeColor,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -44,6 +50,26 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  appleWebApp: {
+    capable: true,
+    title: pwaTheme.name,
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: [
+      {
+        url: "/icon-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/icon-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -68,6 +94,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <ServiceWorkerRegister />
           <OAuthSiteErrorRedirect />
           {children}
         </ThemeProvider>
