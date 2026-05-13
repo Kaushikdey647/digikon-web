@@ -7,9 +7,16 @@ import { getServiceBySlug } from "@/lib/marketing";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Free consult | Digikon Marketing",
+  title: "Free consult",
   description:
     "Book a no-obligation consult with Digikon Marketing. Tell us your goals and we'll reply within two business days.",
+  alternates: { canonical: "/consult" },
+  openGraph: {
+    title: "Free consult | Digikon Marketing",
+    description:
+      "Book a no-obligation consult with Digikon Marketing. Tell us your goals and we'll reply within two business days.",
+    url: "/consult",
+  },
 };
 
 type ConsultPageProps = {

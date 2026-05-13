@@ -12,9 +12,16 @@ import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Services | Digikon Marketing",
+  title: "Services",
   description:
     "SEO, paid media, content, and analytics — full-funnel digital marketing from Digikon Marketing.",
+  alternates: { canonical: "/services" },
+  openGraph: {
+    title: "Services | Digikon Marketing",
+    description:
+      "SEO, paid media, content, and analytics — full-funnel digital marketing from Digikon Marketing.",
+    url: "/services",
+  },
 };
 
 async function ServicesGridFromSupabase() {

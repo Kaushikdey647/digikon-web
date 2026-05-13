@@ -8,9 +8,10 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Add a testimonial | Digikon Marketing",
+  title: "Add a testimonial",
   description:
     "Signed-in clients can share a public testimonial for Digikon Marketing.",
+  robots: { index: false, follow: false },
 };
 
 export default function AddTestimonialPage() {

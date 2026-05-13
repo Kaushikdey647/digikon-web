@@ -27,21 +27,29 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-function titleCaseFromSlug(slug: string): string {
-  return slug
-    .split("-")
-    .filter(Boolean)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}
-
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const { slug } = await props.params;
-  const label = titleCaseFromSlug(slug);
+  const service = await getServiceBySlug(slug);
+  if (!service) {
+    return {
+      title: "Service",
+      robots: { index: false, follow: false },
+    };
+  }
   return {
-    title: `${label} | Digikon Marketing`,
-    description: `Learn how Digikon Marketing approaches ${label.toLowerCase()} — roadmap, SLA, examples, and how to request a consult.`,
-    alternates: { canonical: `/services/${slug}` },
+    title: service.title,
+    description: service.description,
+    alternates: { canonical: `/services/${service.slug}` },
+    openGraph: {
+      title: service.title,
+      description: service.description,
+      url: `/services/${service.slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: service.title,
+      description: service.description,
+    },
   };
 }
 

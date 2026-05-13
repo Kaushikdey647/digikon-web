@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { AdminMobileNav } from "@/components/admin/admin-mobile-nav";
@@ -5,6 +6,10 @@ import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { isCurrentUserAdmin } from "@/lib/auth/is-admin";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function AdminLayout({
   children,
