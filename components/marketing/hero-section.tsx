@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { INSTAGRAM_PROFILE_URL } from "@/lib/marketing-links";
 import { cn } from "@/lib/utils";
 
 export function HeroSection() {
@@ -47,6 +49,23 @@ export function HeroSection() {
           No obligation — tell us your goals and we&apos;ll reply within two
           business days.
         </p>
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="mt-4 text-saffron hover:bg-saffron/10 hover:text-saffron"
+        >
+          <a
+            href={INSTAGRAM_PROFILE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2"
+            aria-label="Follow Digikon Marketing on Instagram (opens in new tab)"
+          >
+            <Instagram className="h-4 w-4 shrink-0" aria-hidden />
+            Follow us on Instagram
+          </a>
+        </Button>
       </div>
     </section>
   );
