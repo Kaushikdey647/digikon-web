@@ -1,5 +1,6 @@
 "use server";
 
+import { fullNameForLead } from "@/lib/auth-user-display";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -49,12 +50,30 @@ export async function submitLead(
     };
   }
 
-  const name = String(formData.get("name") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
   const form_context = normalizeFormContext(
     String(formData.get("form_context") ?? "home").trim(),
   );
+
+  let name = String(formData.get("name") ?? "").trim();
+  let email = String(formData.get("email") ?? "").trim();
+
+  if (form_context === "consult") {
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    const user = userData.user;
+    if (userError || !user?.email?.trim()) {
+      return {
+        status: "error",
+        error:
+          "We could not read your account email. Sign out and sign in again, then try once more.",
+      };
+    }
+    email = user.email.trim();
+    name = fullNameForLead(user);
+    if (name.length > NAME_MAX) {
+      name = name.slice(0, NAME_MAX);
+    }
+  }
 
   const marketingServiceIdRaw = String(
     formData.get("marketing_service_id") ?? "",
@@ -87,16 +106,18 @@ export async function submitLead(
       "Please confirm you agree to be contacted about this request.";
   }
 
-  if (!name) {
-    fieldErrors.name = "Name is required.";
-  } else if (name.length > NAME_MAX) {
-    fieldErrors.name = `Name must be at most ${NAME_MAX} characters.`;
-  }
+  if (form_context !== "consult") {
+    if (!name) {
+      fieldErrors.name = "Name is required.";
+    } else if (name.length > NAME_MAX) {
+      fieldErrors.name = `Name must be at most ${NAME_MAX} characters.`;
+    }
 
-  if (!email) {
-    fieldErrors.email = "Email is required.";
-  } else if (!isValidEmail(email)) {
-    fieldErrors.email = "Enter a valid email address.";
+    if (!email) {
+      fieldErrors.email = "Email is required.";
+    } else if (!isValidEmail(email)) {
+      fieldErrors.email = "Enter a valid email address.";
+    }
   }
 
   if (!message) {

@@ -1,4 +1,5 @@
 import { LeadForm } from "@/components/marketing/lead-form";
+import { fullNameForLead } from "@/lib/auth-user-display";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,6 +34,18 @@ export async function ContactSection({
   const { data, error } = await supabase.auth.getClaims();
   const isSignedIn = !error && Boolean(data?.claims?.sub);
 
+  let consultAuthProfile: { email: string; name: string } | null = null;
+  if (isSignedIn && formContext === "consult") {
+    const { data: userData } = await supabase.auth.getUser();
+    const user = userData.user;
+    if (user?.email?.trim()) {
+      consultAuthProfile = {
+        email: user.email.trim(),
+        name: fullNameForLead(user),
+      };
+    }
+  }
+
   const defaultLoginNext =
     formContext === "consult" ? "/consult" : "/#contact";
   const loginNext = loginNextOverride ?? defaultLoginNext;
@@ -57,10 +70,25 @@ export async function ContactSection({
           <p className="mt-3 text-muted-foreground">{description}</p>
         </div>
         {isSignedIn ? (
-          <LeadForm
-            formContext={formContext}
-            marketingServiceId={marketingServiceId}
-          />
+          formContext === "consult" && !consultAuthProfile ? (
+            <Card className="border-border/80 shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-xl">Email required</CardTitle>
+                <CardDescription>
+                  Your signed-in account does not have an email we can use for
+                  follow-up. Sign out, sign in with a provider that shares an
+                  email, or contact us from the home page contact form after
+                  updating your profile.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ) : (
+            <LeadForm
+              formContext={formContext}
+              marketingServiceId={marketingServiceId}
+              consultAuthProfile={consultAuthProfile}
+            />
+          )
         ) : (
           <Card className="border-border/80 shadow-sm">
             <CardHeader>

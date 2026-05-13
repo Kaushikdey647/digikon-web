@@ -23,11 +23,14 @@ const textareaClassName = cn(
 type LeadFormProps = {
   formContext?: "home" | "consult";
   marketingServiceId?: string | null;
+  /** When set on consult, name/email are taken from the signed-in account (server + UI). */
+  consultAuthProfile?: { email: string; name: string } | null;
 };
 
 export function LeadForm({
   formContext = "home",
   marketingServiceId = null,
+  consultAuthProfile = null,
 }: LeadFormProps) {
   const [state, formAction, isPending] = useActionState(
     submitLead,
@@ -46,13 +49,27 @@ export function LeadForm({
   const formError = state.status === "error" ? state.error : null;
   const success = state.status === "success";
 
+  const useAccountIdentity =
+    formContext === "consult" && consultAuthProfile !== null;
+
   return (
     <Card className="border-border/80 shadow-sm">
       <CardHeader>
-        <CardTitle className="text-xl">Start a conversation</CardTitle>
+        <CardTitle className="text-xl">
+          {useAccountIdentity ? "Complete your consult request" : "Start a conversation"}
+        </CardTitle>
         <CardDescription>
-          Share your goals and we&apos;ll get back to you within two business
-          days.
+          {useAccountIdentity ? (
+            <>
+              Add a short message and confirm we can contact you. We&apos;ll use
+              the name and email from your Google sign-in.
+            </>
+          ) : (
+            <>
+              Share your goals and we&apos;ll get back to you within two business
+              days.
+            </>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -65,46 +82,65 @@ export function LeadForm({
               value={marketingServiceId}
             />
           ) : null}
-          <div className="space-y-2">
-            <Label htmlFor="lead-name">Name</Label>
-            <Input
-              id="lead-name"
-              name="name"
-              type="text"
-              autoComplete="name"
-              required
-              maxLength={100}
-              aria-invalid={fieldErrors.name ? true : undefined}
-              aria-describedby={
-                fieldErrors.name ? "lead-name-error" : undefined
-              }
-            />
-            {fieldErrors.name ? (
-              <p id="lead-name-error" className="text-sm text-destructive">
-                {fieldErrors.name}
+          {useAccountIdentity && consultAuthProfile ? (
+            <div
+              className="rounded-md border border-border/80 bg-muted/30 px-3 py-3 text-sm text-muted-foreground"
+              role="status"
+            >
+              <p>
+                <span className="text-foreground">Name:</span>{" "}
+                {consultAuthProfile.name}
               </p>
-            ) : null}
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lead-email">Email</Label>
-            <Input
-              id="lead-email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              maxLength={254}
-              aria-invalid={fieldErrors.email ? true : undefined}
-              aria-describedby={
-                fieldErrors.email ? "lead-email-error" : undefined
-              }
-            />
-            {fieldErrors.email ? (
-              <p id="lead-email-error" className="text-sm text-destructive">
-                {fieldErrors.email}
+              <p className="mt-1">
+                <span className="text-foreground">Email:</span>{" "}
+                {consultAuthProfile.email}
               </p>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
+          {!useAccountIdentity ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="lead-name">Name</Label>
+                <Input
+                  id="lead-name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  maxLength={100}
+                  aria-invalid={fieldErrors.name ? true : undefined}
+                  aria-describedby={
+                    fieldErrors.name ? "lead-name-error" : undefined
+                  }
+                />
+                {fieldErrors.name ? (
+                  <p id="lead-name-error" className="text-sm text-destructive">
+                    {fieldErrors.name}
+                  </p>
+                ) : null}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lead-email">Email</Label>
+                <Input
+                  id="lead-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  maxLength={254}
+                  aria-invalid={fieldErrors.email ? true : undefined}
+                  aria-describedby={
+                    fieldErrors.email ? "lead-email-error" : undefined
+                  }
+                />
+                {fieldErrors.email ? (
+                  <p id="lead-email-error" className="text-sm text-destructive">
+                    {fieldErrors.email}
+                  </p>
+                ) : null}
+              </div>
+            </>
+          ) : null}
           <div className="space-y-2">
             <Label htmlFor="lead-message">Message</Label>
             <textarea
@@ -170,7 +206,11 @@ export function LeadForm({
             </p>
           ) : null}
           <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
-            {isPending ? "Sending…" : "Request consult"}
+            {isPending
+              ? "Sending…"
+              : formContext === "consult"
+                ? "Request consult"
+                : "Send message"}
           </Button>
         </form>
       </CardContent>
